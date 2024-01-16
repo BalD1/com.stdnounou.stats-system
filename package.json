@@ -5,10 +5,6 @@
     "description": "This is a system that will let you give an object stats. These stats will be modifiable at runtime.",
     "unity": "2021.3",
     "documentationUrl": "https://stdnounous-doc-1abfdd.webflow.io",
-    "dependencies": {
-        "com.[company-name].some-package": "1.0.0",
-        "com.[company-name].other-package": "2.0.0"
-    },
     "author": {
         "name": "BalD",
         "email": "florianhusson1@gmail.com",
