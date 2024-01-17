@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <ID>k__BackingField: SampleSpeedModifier
   <Stackable>k__BackingField: 1
-  <StatType>k__BackingField: 2
+  <StatType>k__BackingField: 7
   <Amount>k__BackingField: 10
   <ModifierType>k__BackingField: 0
   <Temporary>k__BackingField: 0
