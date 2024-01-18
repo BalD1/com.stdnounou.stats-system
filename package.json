@@ -1,6 +1,6 @@
 {
     "name": "com.stdnounou.stats-system",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "displayName": "Stats System",
     "description": "This is a system that will let you give an object stats. These stats will be modifiable at runtime.",
     "unity": "2021.3",

@@ -7,8 +7,8 @@ namespace StdNounou.Stats.Samples
 {
     public class InspectorStatModifier_MonoHandler : MonoBehaviour
     {
-        [SerializeField] private SO_EStatModifierData modifierData;
-        [SerializeField] private EMonoStatsHandler statsHandler;
+        [SerializeField] private SO_StatModifierData_EnumExemple modifierData;
+        [SerializeField] private MonoStatsHandler_EnumExemple statsHandler;
 
         public void ApplyModifier()
         {

@@ -9,9 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d67993c4527ffe4aa9dd1a1f8bade9e, type: 3}
+  m_Script: {fileID: 11500000, guid: 9f1b17645f858b54088a71c1b1019860, type: 3}
   m_Name: Props Affiliations
   m_EditorClassIdentifier: 
-  <ID>k__BackingField: Props Affiliations
+  <ID>k__BackingField: Props
   <AffiliationsModifiers>k__BackingField:
-    _serializedList: []
+    _serializedList:
+    - Key: {fileID: 11400000, guid: 832ebd2cdfff5d249b7e441e3ff82dc0, type: 2}
+      Value:
+        <AllowInteractions>k__BackingField: 1
+        <StatsModificators>k__BackingField:
+          _serializedList:
+          - Key: 6
+            Value: 2

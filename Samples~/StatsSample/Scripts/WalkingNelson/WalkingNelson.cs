@@ -6,7 +6,7 @@ namespace StdNounou.Stats.Samples
     [SelectionBase]
     public class WalkingNelson : MonoBehaviour
     {
-        [SerializeField] private EMonoStatsHandler stats;
+        [SerializeField] private MonoStatsHandler_EnumExemple stats;
 
         [SerializeField] private Transform targetPointA;
         [SerializeField] private Transform targetPointB;
@@ -26,7 +26,7 @@ namespace StdNounou.Stats.Samples
 
         private void MoveTowardsTarget()
         {
-            if (!stats.StatsHandler.TryGetFinalStat(Core.E_StatTypes.Speed, out float speed))
+            if (!stats.StatsHandler.TryGetFinalStat(E_StatsEnumExemple.Speed, out float speed))
             {
                 this.LogError("Could not find speed stat.");
                 return;

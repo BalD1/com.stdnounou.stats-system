@@ -17,8 +17,8 @@ namespace StdNounou.Stats.Samples
         [SerializeField] private Animator animator;
         [SerializeField] private FighterAnimCallbacks animCallbacks;
 
-        [field: SerializeField] public EMonoStatsHandler MonoStatsHandler { get; private set; }
-        private StatsHandler_Core<E_StatTypes> statsHandler;
+        [field: SerializeField] public MonoStatsHandler_EnumExemple MonoStatsHandler { get; private set; }
+        private StatsHandler_Core<E_StatsEnumExemple> statsHandler;
         private float currentHealth;
 
         private Timer attackTimer;
@@ -29,12 +29,12 @@ namespace StdNounou.Stats.Samples
         {
             statsHandler = MonoStatsHandler.StatsHandler;
 
-            MonoStatsHandler.StatsHandler.TryGetFinalStat(E_StatTypes.MaxHP, out currentHealth);
+            MonoStatsHandler.StatsHandler.TryGetFinalStat(E_StatsEnumExemple.MaxHP, out currentHealth);
             UpdateUI();
             statsHandler.OnStatChange += OnStatChanged;
 
             animCallbacks.OnAnimAttackTrigger += Animator_AttackTrigger;
-            if (statsHandler.TryGetFinalStat(E_StatTypes.AttackCooldown, out float attackCooldown))
+            if (statsHandler.TryGetFinalStat(E_StatsEnumExemple.AttackCooldown, out float attackCooldown))
             {
                 if (attackCooldown < 0) return;
                 attackTimer = new Timer(attackCooldown, Attack, true);
@@ -49,13 +49,13 @@ namespace StdNounou.Stats.Samples
 
         public void Animator_AttackTrigger()
         {
-            opponent.Damage(CalculateDamages());
+            opponent.Damage(CalculateDamages(), this);
         }
 
         private float CalculateDamages()
         {
-            StatsHandler_Core<E_StatTypes> opponentStats = opponent.MonoStatsHandler.StatsHandler;
-            statsHandler.TryGetFinalStat(E_StatTypes.Damages, out float damages);
+            StatsHandler_Core<E_StatsEnumExemple> opponentStats = opponent.MonoStatsHandler.StatsHandler;
+            statsHandler.TryGetFinalStat(E_StatsEnumExemple.Damages, out float damages);
             bool hasFinalDamagesModif = false;
             float finalDamagesModif = 0;
 
@@ -65,20 +65,28 @@ namespace StdNounou.Stats.Samples
                 if (!modifiers.AllowInteractions) return 0;
 
                 // keep the damages modifiers for the very end
-                hasFinalDamagesModif = modifiers.StatsModificators.TryGetValue(E_StatTypes.Damages, out finalDamagesModif);
+                hasFinalDamagesModif = modifiers.StatsModificators.TryGetValue(E_StatsEnumExemple.Damages, out finalDamagesModif);
             }
 
-            statsHandler.TryGetFinalStat(E_StatTypes.CritChances, out float critChances);
+            statsHandler.TryGetFinalStat(E_StatsEnumExemple.CritChances, out float critChances);
             if (critChances > 0)
             {
                 // calculate crit damages
-                statsHandler.TryGetFinalStat(E_StatTypes.CritMultiplier, out float critMultiplier);
+                statsHandler.TryGetFinalStat(E_StatsEnumExemple.CritMultiplier, out float critMultiplier);
                 if (RandomExtensions.PercentageChance(critChances))
                     damages *= critMultiplier;
             }
 
-            opponentStats.TryGetFinalStat(E_StatTypes.DamageReduction, out float damagesReduction);
-            damages -= damagesReduction;
+            opponentStats.TryGetFinalStat(E_StatsEnumExemple.DamageReduction, out float opponentDamagesReduction);
+
+            float opponentFinalDamagesReduction = opponentDamagesReduction;
+            if (opponentStats.TryGetAffiliationModifiersOf(this.statsHandler.GetAffiliation(), out var opponentModifiers))
+            {
+                if (opponentModifiers.StatsModificators.TryGetValue(E_StatsEnumExemple.DamageReduction, out float reducModifier))
+                    opponentFinalDamagesReduction *= reducModifier;
+            }
+
+            damages -= opponentFinalDamagesReduction;
 
             if (hasFinalDamagesModif)
                 damages *= finalDamagesModif;
@@ -86,22 +94,22 @@ namespace StdNounou.Stats.Samples
             return damages;
         }
 
-        public void Damage(float amount)
+        public void Damage(float amount, Fighter attacker)
         {
             currentHealth -= amount;
-            if (currentHealth <= 0) statsHandler.TryGetFinalStat(E_StatTypes.MaxHP, out currentHealth);
+            if (currentHealth <= 0) statsHandler.TryGetFinalStat(E_StatsEnumExemple.MaxHP, out currentHealth);
             UpdateUI();
         }
 
-        private void OnStatChanged(StatChangeEventArgs<E_StatTypes> args)
+        private void OnStatChanged(StatChangeEventArgs<E_StatsEnumExemple> args)
         {
             switch (args.Type)
             {
-                case E_StatTypes.MaxHP:
+                case E_StatsEnumExemple.MaxHP:
                     UpdateUI();
                     break;
 
-                case E_StatTypes.AttackCooldown:
+                case E_StatsEnumExemple.AttackCooldown:
                     attackTimer.SetNewMaxDuration(args.FinalValue);
                     break;
             }
@@ -109,7 +117,7 @@ namespace StdNounou.Stats.Samples
 
         private void UpdateUI()
         {
-            statsHandler.TryGetFinalStat(E_StatTypes.MaxHP, out float maxHP);
+            statsHandler.TryGetFinalStat(E_StatsEnumExemple.MaxHP, out float maxHP);
             uiHPTMP.text = string.Format(UI_HP_DISPLAY_FORMAT, currentHealth, maxHP);
         }
     } 
