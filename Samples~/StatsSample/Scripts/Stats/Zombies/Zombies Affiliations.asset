@@ -20,3 +20,8 @@ MonoBehaviour:
         <AllowInteractions>k__BackingField: 0
         <StatsModificators>k__BackingField:
           _serializedList: []
+    - Key: {fileID: 11400000, guid: 4e7fecaea8b12044392ad710df7ff546, type: 2}
+      Value:
+        <AllowInteractions>k__BackingField: 0
+        <StatsModificators>k__BackingField:
+          _serializedList: []

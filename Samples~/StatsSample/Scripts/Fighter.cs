@@ -12,7 +12,6 @@ namespace StdNounou.Stats.Samples
         [SerializeField] private TextMeshProUGUI uiHPTMP;
 
         [SerializeField] private Fighter opponent;
-        private Vector2 basePos;
 
         [SerializeField] private Animator animator;
         [SerializeField] private FighterAnimCallbacks animCallbacks;
@@ -52,46 +51,54 @@ namespace StdNounou.Stats.Samples
             opponent.Damage(CalculateDamages(), this);
         }
 
+        /// <summary>
+        /// Exemple of stats usages alongside affiliation modifiers.
+        /// </summary>
+        /// <returns></returns>
         private float CalculateDamages()
         {
+            // caches for readability
             StatsHandler_Core<E_StatsEnumExemple> opponentStats = opponent.MonoStatsHandler.StatsHandler;
-            statsHandler.TryGetFinalStat(E_StatsEnumExemple.Damages, out float damages);
-            bool hasFinalDamagesModif = false;
-            float finalDamagesModif = 0;
+            SO_Affiliation<E_StatsEnumExemple> opponentAffiliation = opponentStats.GetAffiliation();
+            SO_Affiliation<E_StatsEnumExemple> selfAffiliation = this.statsHandler.GetAffiliation();
 
-            // Try Get affiliation modifiers from self to opponent
-            if (this.statsHandler.TryGetAffiliationModifiersOf(opponentStats.GetAffiliation(), out var modifiers))
-            {
-                if (!modifiers.AllowInteractions) return 0;
+            // Do we allow interactions with the opponent ?
+            if (selfAffiliation.AllowsInteractionsWith(opponentAffiliation) == false) return 0;
 
-                // keep the damages modifiers for the very end
-                hasFinalDamagesModif = modifiers.StatsModificators.TryGetValue(E_StatsEnumExemple.Damages, out finalDamagesModif);
-            }
+            this.statsHandler.TryGetFinalStat(E_StatsEnumExemple.Damages, out float damages);
 
-            statsHandler.TryGetFinalStat(E_StatsEnumExemple.CritChances, out float critChances);
-            if (critChances > 0)
-            {
-                // calculate crit damages
-                statsHandler.TryGetFinalStat(E_StatsEnumExemple.CritMultiplier, out float critMultiplier);
-                if (RandomExtensions.PercentageChance(critChances))
-                    damages *= critMultiplier;
-            }
-
-            opponentStats.TryGetFinalStat(E_StatsEnumExemple.DamageReduction, out float opponentDamagesReduction);
-
-            float opponentFinalDamagesReduction = opponentDamagesReduction;
-            if (opponentStats.TryGetAffiliationModifiersOf(this.statsHandler.GetAffiliation(), out var opponentModifiers))
-            {
-                if (opponentModifiers.StatsModificators.TryGetValue(E_StatsEnumExemple.DamageReduction, out float reducModifier))
-                    opponentFinalDamagesReduction *= reducModifier;
-            }
-
-            damages -= opponentFinalDamagesReduction;
-
-            if (hasFinalDamagesModif)
-                damages *= finalDamagesModif;
+            CalculateCrits(ref damages);
+            CalculateDamagesReduction(ref damages);
+            // Do our affiliation has a damages modifier for opponent's affiliation ?
+            damages = selfAffiliation.TryGetModifiedStat(opponentAffiliation, E_StatsEnumExemple.Damages, damages);
 
             return damages;
+
+            // Calculators
+
+            void CalculateCrits(ref float currentDamages)
+            {
+                this.statsHandler.TryGetFinalStat(E_StatsEnumExemple.CritChances, out float critChances);
+                critChances = selfAffiliation.TryGetModifiedStat(opponentAffiliation, E_StatsEnumExemple.CritChances, critChances);
+                if (critChances > 0)
+                {
+                    // calculate crit damages
+                    this.statsHandler.TryGetFinalStat(E_StatsEnumExemple.CritMultiplier, out float critMultiplier);
+                    critMultiplier = selfAffiliation.TryGetModifiedStat(opponentAffiliation, E_StatsEnumExemple.CritMultiplier, critMultiplier);
+                    if (RandomExtensions.PercentageChance(critChances))
+                        currentDamages *= critMultiplier;
+                }
+            }
+            void CalculateDamagesReduction(ref float currentDamages)
+            {
+                // Try get the opponent's general damages reductions
+                if (opponentStats.TryGetFinalStat(E_StatsEnumExemple.DamageReduction, out float opponentDamagesReduction))
+                {
+                    // Do the opponent's affiliation has a damage reductions modifier for our affiliation ?
+                    float opponentFinalDamagesReduction = opponentAffiliation.TryGetModifiedStat(selfAffiliation, E_StatsEnumExemple.DamageReduction, opponentDamagesReduction);
+                    currentDamages -= opponentFinalDamagesReduction;
+                }
+            }
         }
 
         public void Damage(float amount, Fighter attacker)

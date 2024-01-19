@@ -26,4 +26,6 @@ MonoBehaviour:
         <StatsModificators>k__BackingField:
           _serializedList:
           - Key: 3
-            Value: 5
+            Value:
+              <Value>k__BackingField: 5
+              <ModificationType>k__BackingField: 0
