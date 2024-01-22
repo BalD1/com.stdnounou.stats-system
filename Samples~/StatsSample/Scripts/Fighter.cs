@@ -110,7 +110,7 @@ namespace StdNounou.Stats.Samples
 
         private void OnStatChanged(StatChangeEventArgs<E_StatsEnumExemple> args)
         {
-            switch (args.Type)
+            switch (args.StatKey)
             {
                 case E_StatsEnumExemple.MaxHP:
                     UpdateUI();

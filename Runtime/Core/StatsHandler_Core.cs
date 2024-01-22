@@ -258,13 +258,13 @@ namespace StdNounou.Stats.Core
 
     public class StatChangeEventArgs<StatsKey> : EventArgs
     {
-        public StatChangeEventArgs(StatsKey type, float modifier, float finalVal)
+        public StatChangeEventArgs(StatsKey statKey, float modifier, float finalVal)
         {
-            this.Type = type;
+            this.StatKey = statKey;
             this.ModifierValue = modifier;
             this.FinalValue = finalVal;
         }
-        public StatsKey Type { get; private set; }
+        public StatsKey StatKey { get; private set; }
         public float ModifierValue { get; private set; }
         public float FinalValue { get; private set; }
     }
