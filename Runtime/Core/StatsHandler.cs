@@ -268,6 +268,18 @@ namespace StdNounou.Stats
             return BaseStats.Affiliation.TryGetAffiliationModifier(target, out modifiers);
         }
 
+        public float TryGetModifiedStatFromAttribute(SO_Attribute target, E_StatsKeys stat, float statValue)
+        {
+            foreach (var item in BaseStats.Attributes)
+            {
+                statValue = item.TryGetModifiedStat(target, stat, statValue);
+            }
+            return statValue;
+        }
+
+        public bool AllowsInteractionsWith(SO_Affiliation target)
+            => BaseStats.Affiliation.AllowsInteractionsWith(target);
+
         public SO_Affiliation GetAffiliation()
             => BaseStats.Affiliation;
     }

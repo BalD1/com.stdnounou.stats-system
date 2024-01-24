@@ -8,6 +8,7 @@ namespace StdNounou.Stats
     {
         [field: SerializeField] public string EntityName { get; private set; }
         [field: SerializeField] public SO_Affiliation Affiliation { get; private set; }
+        [field: SerializeField] public SO_Attribute[] Attributes { get; private set; }
         [field: SerializeField] public SerializedDictionary<E_StatsKeys, StatData> Stats { get; private set; }
 
         public bool TryGetStatData(E_StatsKeys type, out StatData statData)
