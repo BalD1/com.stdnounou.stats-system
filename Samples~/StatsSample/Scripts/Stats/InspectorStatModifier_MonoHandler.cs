@@ -7,12 +7,12 @@ namespace StdNounou.Stats.Samples
 {
     public class InspectorStatModifier_MonoHandler : MonoBehaviour
     {
-        [SerializeField] private SO_StatModifierData_EnumExemple modifierData;
-        [SerializeField] private MonoStatsHandler_EnumExemple statsHandler;
+        [SerializeField] private SO_StatModifierData modifierData;
+        [SerializeField] private MonoStatsHandler statsHandler;
 
         public void ApplyModifier()
         {
-            statsHandler.StatsHandler.TryAddModifier(modifierData, out var result);
+            statsHandler.StatsHandler.TryAddModifier(modifierData, out _, out _);
         }
     } 
 }
@@ -21,7 +21,7 @@ namespace StdNounou.Stats.Samples
 namespace StdNounou.Stats.Samples
 {
     [CustomEditor(typeof(InspectorStatModifier_MonoHandler))]
-    public class ED_InspectorStatModifier : Editor
+    public class ED_InspectorStatModifier : UnityEditor.Editor
     {
         private InspectorStatModifier_MonoHandler targetScript;
 

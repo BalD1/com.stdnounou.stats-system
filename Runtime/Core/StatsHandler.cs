@@ -3,23 +3,23 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace StdNounou.Stats.Core
+namespace StdNounou.Stats
 {
     [System.Serializable]
-    public class StatsHandler_Core<StatsKey>
+    public class StatsHandler
     {
-        public StatsHandler_Core(SO_BaseStats_Core<StatsKey> baseStats)
+        public StatsHandler(SO_BaseStats baseStats)
         {
             this.BaseStats = baseStats;
         }
 
-        [field: SerializeField] public SO_BaseStats_Core<StatsKey> BaseStats { get; private set; }
-        public Dictionary<StatsKey, float> PermanentBonusStats { get; protected set; } = new Dictionary<StatsKey, float>();
-        public Dictionary<StatsKey, float> TemporaryBonusStats { get; protected set; } = new Dictionary<StatsKey, float>();
-        public Dictionary<StatsKey, float> BrutFinalStats { get; protected set; } = new Dictionary<StatsKey, float>();
+        [field: SerializeField] public SO_BaseStats BaseStats { get; private set; }
+        public Dictionary<E_StatsKeys, float> PermanentBonusStats { get; protected set; } = new Dictionary<E_StatsKeys, float>();
+        public Dictionary<E_StatsKeys, float> TemporaryBonusStats { get; protected set; } = new Dictionary<E_StatsKeys, float>();
+        public Dictionary<E_StatsKeys, float> BrutFinalStats { get; protected set; } = new Dictionary<E_StatsKeys, float>();
 
-        public Dictionary<string, StatsModifier_Core<StatsKey>> UniqueStatsModifiers { get; protected set; } = new Dictionary<string, StatsModifier_Core<StatsKey>>();
-        public Dictionary<string, List<StatsModifier_Core<StatsKey>>> StackableStatsModifiers { get; protected set; } = new Dictionary<string, List<StatsModifier_Core<StatsKey>>>();
+        public Dictionary<string, StatsModifier> UniqueStatsModifiers { get; protected set; } = new Dictionary<string, StatsModifier>();
+        public Dictionary<string, List<StatsModifier>> StackableStatsModifiers { get; protected set; } = new Dictionary<string, List<StatsModifier>>();
 
         public event Action OnAskReset;
 
@@ -32,22 +32,22 @@ namespace StdNounou.Stats.Core
             Unstackable,
         }
 
-        public event Action<StatChangeEventArgs<StatsKey>> OnStatChange;
+        public event Action<StatChangeEventArgs> OnStatChange;
 
         public void InitializeDictionaries()
         {
-            PermanentBonusStats = new Dictionary<StatsKey, float>();
-            TemporaryBonusStats = new Dictionary<StatsKey, float>();
-            BrutFinalStats = new Dictionary<StatsKey, float>();
+            PermanentBonusStats = new Dictionary<E_StatsKeys, float>();
+            TemporaryBonusStats = new Dictionary<E_StatsKeys, float>();
+            BrutFinalStats = new Dictionary<E_StatsKeys, float>();
 
-            UniqueStatsModifiers = new Dictionary<string, StatsModifier_Core<StatsKey>>();
-            StackableStatsModifiers = new Dictionary<string, List<StatsModifier_Core<StatsKey>>>();
+            UniqueStatsModifiers = new Dictionary<string, StatsModifier>();
+            StackableStatsModifiers = new Dictionary<string, List<StatsModifier>>();
             if (BaseStats == null)
             {
                 this.LogError("Stats SO was not set.");
                 return;
             }
-            foreach (var item in BaseStats.GetStatsContainer())
+            foreach (var item in BaseStats.Stats)
             {
                 BrutFinalStats.Add(item.Key, item.Value.Value);
                 PermanentBonusStats.Add(item.Key, 0);
@@ -65,7 +65,7 @@ namespace StdNounou.Stats.Core
         /// <param name="type"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public bool TryGetBaseStat(StatsKey type, out float value)
+        public bool TryGetBaseStat(E_StatsKeys type, out float value)
         {
             return BaseStats.TryGetStatValue(type, out value);
         }
@@ -76,13 +76,13 @@ namespace StdNounou.Stats.Core
         /// <param name="type"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public bool TryGetFinalStat(StatsKey type, out float value)
+        public bool TryGetFinalStat(E_StatsKeys type, out float value)
         {
             bool res = BrutFinalStats.TryGetValue(type, out value);
             if (!res) return false;
 
-            float higherAllowedValue = BaseStats.GetStatsContainer()[type].HigherAllowedValue;
-            float lowestAllowedValue = BaseStats.GetStatsContainer()[type].LowestAllowedValue;
+            float higherAllowedValue = BaseStats.Stats[type].HigherAllowedValue;
+            float lowestAllowedValue = BaseStats.Stats[type].LowestAllowedValue;
 
             if (value > higherAllowedValue)
                 value = higherAllowedValue;
@@ -92,15 +92,15 @@ namespace StdNounou.Stats.Core
             return true;
         }
 
-        public bool TryAddModifier(SO_StatModifierData_Core<StatsKey> data, out E_ModifierAddResult result)
+        public bool TryAddModifier(SO_StatModifierData data, out E_ModifierAddResult result, out StatsModifier modifier)
         {
             if (data.Stackable)
-                return TryAddStackableModifier(data, out result);
+                return TryAddStackableModifier(data, out result, out modifier);
             else
-                return TryAddUniqueModifier(data, out result);
+                return TryAddUniqueModifier(data, out result, out modifier);
         }
 
-        private bool TryAddStackableModifier(SO_StatModifierData_Core<StatsKey> data, out E_ModifierAddResult result)
+        private bool TryAddStackableModifier(SO_StatModifierData data, out E_ModifierAddResult result, out StatsModifier modifier)
         {
 #if UNITY_EDITOR
             if (debug) this.Log($"Try Add Stackable Modifier {data.ID}");
@@ -108,6 +108,7 @@ namespace StdNounou.Stats.Core
             if (!TrySetModifier(data))
             {
                 result = E_ModifierAddResult.StatAlreadyMaxed;
+                modifier = null;
 #if UNITY_EDITOR
                 if (debug) this.Log($"Failed to add modifier {data.ID} : Stats {data.StatType} already maxed.");
 #endif
@@ -116,8 +117,9 @@ namespace StdNounou.Stats.Core
 
             //add the modifier to the list
             if (!StackableStatsModifiers.ContainsKey(data.ID))
-                StackableStatsModifiers.Add(data.ID, new List<StatsModifier_Core<StatsKey>>());
-            StackableStatsModifiers[data.ID].Add(new StatsModifier_Core<StatsKey>(data, this));
+                StackableStatsModifiers.Add(data.ID, new List<StatsModifier>());
+            modifier = new StatsModifier(data, this);
+            StackableStatsModifiers[data.ID].Add(modifier);
 
             result = E_ModifierAddResult.Success;
             ModifyBrutFinalStat(data.StatType, GetModifierValue(data));
@@ -128,12 +130,13 @@ namespace StdNounou.Stats.Core
             return true;
         }
 
-        private bool TryAddUniqueModifier(SO_StatModifierData_Core<StatsKey> data, out E_ModifierAddResult result)
+        private bool TryAddUniqueModifier(SO_StatModifierData data, out E_ModifierAddResult result, out StatsModifier modifier)
         {
             // if the unique modifier already exists, return
             if (UniqueStatsModifiers.ContainsKey(data.ID))
             {
                 result = E_ModifierAddResult.Unstackable;
+                modifier = null;
 #if UNITY_EDITOR
                 if (debug) this.Log($"Failed to add modifier {data.ID} : target already contains an instance.");
 #endif
@@ -142,13 +145,15 @@ namespace StdNounou.Stats.Core
             if (!TrySetModifier(data))
             {
                 result = E_ModifierAddResult.StatAlreadyMaxed;
+                modifier = null;
 #if UNITY_EDITOR
                 if (debug) this.Log($"Failed to add modifier {data.ID} : Stats {data.StatType} already maxed.");
 #endif
                 return false;
             }
 
-            UniqueStatsModifiers.Add(data.ID, new StatsModifier_Core<StatsKey>(data, this));
+            modifier = new StatsModifier(data, this);
+            UniqueStatsModifiers.Add(data.ID, modifier);
             ModifyBrutFinalStat(data.StatType, GetModifierValue(data));
             result = E_ModifierAddResult.Success;
 #if UNITY_EDITOR
@@ -157,7 +162,7 @@ namespace StdNounou.Stats.Core
             return true;
         }
 
-        private bool TrySetModifier(SO_StatModifierData_Core<StatsKey> data)
+        private bool TrySetModifier(SO_StatModifierData data)
         {
             float modifierValue = GetModifierValue(data);
             if (data.Temporary)
@@ -180,7 +185,7 @@ namespace StdNounou.Stats.Core
                 }
                 else
                 {
-                    if (PermanentBonusStats[data.StatType] >= (BaseStats.GetStatsContainer()[data.StatType].HigherAllowedValue - BaseStats.GetStatsContainer()[data.StatType].Value))
+                    if (PermanentBonusStats[data.StatType] >= (BaseStats.Stats[data.StatType].HigherAllowedValue - BaseStats.Stats[data.StatType].Value))
                         return false;
                     if (PermanentBonusStats.ContainsKey(data.StatType))
                         PermanentBonusStats[data.StatType] += modifierValue;
@@ -191,52 +196,63 @@ namespace StdNounou.Stats.Core
             return true;
         }
 
-        private float GetModifierValue(SO_StatModifierData_Core<StatsKey> data)
+        private float GetModifierValue(SO_StatModifierData data)
         {
             switch (data.ModifierType)
             {
-                case SO_StatModifierData_Core<StatsKey>.E_ModifierType.Additive:
+                case SO_StatModifierData.E_ModifierType.Additive:
                     return data.Amount;
-                case SO_StatModifierData_Core<StatsKey>.E_ModifierType.Multiplier:
+                case SO_StatModifierData.E_ModifierType.Multiplier:
                     BaseStats.TryGetStatValue(data.StatType, out float baseStatValue);
                     return baseStatValue * data.Amount;
             }
             return 0;
         }
 
-        private void ModifyBrutFinalStat(StatsKey type, float value)
+        private void ModifyBrutFinalStat(E_StatsKeys type, float value)
         {
             if (BrutFinalStats.ContainsKey(type))
             {
                 BrutFinalStats[type] += value;
-                OnStatChange?.Invoke(new StatChangeEventArgs<StatsKey>(type, value, BrutFinalStats[type]));
+                OnStatChange?.Invoke(new StatChangeEventArgs(type, value, BrutFinalStats[type]));
             }
         }
 
-        public void RemoveStatModifier(StatsModifier_Core<StatsKey> modifier)
+        public void RemoveStatModifier(StatsModifier modifier)
         {
 #if UNITY_EDITOR
             if (debug) this.Log($"Removing modifier {modifier.Data.ID}");
 #endif
             float modifierValue = GetModifierValue(modifier.Data);
+            if (modifier.Data.Stackable)
+            {
+                if (!StackableStatsModifiers.ContainsKey(modifier.Data.ID) ||
+                    StackableStatsModifiers[modifier.Data.ID].Count == 0)
+                {
+                    this.LogError($"Could not remove {modifier} ({modifier.Data.ID}) : was not found in dictionnary.");
+                    return;
+                }
+                ModifyBrutFinalStat(modifier.Data.StatType, -modifierValue);
+                StackableStatsModifiers[modifier.Data.ID].Remove(modifier);
+            }
+            else
+            {
+                if (!UniqueStatsModifiers.ContainsKey(modifier.Data.ID))
+                {
+                    this.LogError($"Could not remove {modifier} ({modifier.Data.ID}) : was not found in dictionnary.");
+                    return;
+                }
+                ModifyBrutFinalStat(modifier.Data.StatType, -modifierValue);
+                UniqueStatsModifiers.Remove(modifier.Data.ID);
+            }
+
             if (modifier.Data.Temporary)
                 TemporaryBonusStats[modifier.Data.StatType] -= modifierValue;
             else
                 PermanentBonusStats[modifier.Data.StatType] -= modifierValue;
-
-            if (modifier.Data.Stackable)
-            {
-                ModifyBrutFinalStat(modifier.Data.StatType, -modifierValue);
-                StackableStatsModifiers[modifier.Data.ID].Remove(modifier);
-
-                return;
-            }
-
-            ModifyBrutFinalStat(modifier.Data.StatType, -modifierValue);
-            UniqueStatsModifiers.Remove(modifier.Data.ID);
         }
 
-        public void ChangeBaseStats(SO_BaseStats_Core<StatsKey> stats, bool resetModifiers)
+        public void ChangeBaseStats(SO_BaseStats stats, bool resetModifiers)
         {
             BaseStats = stats;
             if (resetModifiers) RemoveAllModifiers();
@@ -247,24 +263,24 @@ namespace StdNounou.Stats.Core
             OnAskReset?.Invoke();
         }
 
-        public bool TryGetAffiliationModifiersOf(SO_Affiliation<StatsKey> target, out SO_Affiliation<StatsKey>.S_AffiliationModifiers modifiers)
+        public bool TryGetAffiliationModifiersOf(SO_Affiliation target, out SO_Affiliation.S_AffiliationModifiers modifiers)
         {
             return BaseStats.Affiliation.TryGetAffiliationModifier(target, out modifiers);
         }
 
-        public SO_Affiliation<StatsKey> GetAffiliation()
+        public SO_Affiliation GetAffiliation()
             => BaseStats.Affiliation;
     }
 
-    public class StatChangeEventArgs<StatsKey> : EventArgs
+    public class StatChangeEventArgs : EventArgs
     {
-        public StatChangeEventArgs(StatsKey statKey, float modifier, float finalVal)
+        public StatChangeEventArgs(E_StatsKeys statKey, float modifier, float finalVal)
         {
             this.StatKey = statKey;
             this.ModifierValue = modifier;
             this.FinalValue = finalVal;
         }
-        public StatsKey StatKey { get; private set; }
+        public E_StatsKeys StatKey { get; private set; }
         public float ModifierValue { get; private set; }
         public float FinalValue { get; private set; }
     }

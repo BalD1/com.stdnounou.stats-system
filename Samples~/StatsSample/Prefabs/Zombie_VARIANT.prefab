@@ -7,6 +7,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5928332927969342557, guid: e2ab94f3447c0904f8b3f9ca0d51dbbb, type: 3}
+      propertyPath: <StatsHandler>k__BackingField.<BaseStats>k__BackingField
+      value: 
+      objectReference: {fileID: 11400000, guid: b1050776b215baa49a726249d2d0423e, type: 2}
     - target: {fileID: 6602319397963718977, guid: e2ab94f3447c0904f8b3f9ca0d51dbbb, type: 3}
       propertyPath: m_Controller
       value: 

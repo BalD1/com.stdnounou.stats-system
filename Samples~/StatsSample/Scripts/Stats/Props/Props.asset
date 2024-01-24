@@ -9,19 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4d45345afacb0e41bed6e95b218ee27, type: 3}
+  m_Script: {fileID: 11500000, guid: b67ee100191459346b45199fa78339b4, type: 3}
   m_Name: Props
   m_EditorClassIdentifier: 
   <EntityName>k__BackingField: Props
-  <Affiliation>k__BackingField: {fileID: 11400000, guid: 4e7fecaea8b12044392ad710df7ff546, type: 2}
-  stats:
+  <Affiliation>k__BackingField: {fileID: 11400000, guid: 7992ce16f736784439d29f0a64a7b67c, type: 2}
+  <Stats>k__BackingField:
     _serializedList:
     - Key: 0
       Value:
         <LowestAllowedValue>k__BackingField: 0
         <Value>k__BackingField: 100
         <HigherAllowedValue>k__BackingField: 200
-    - Key: 6
+    - Key: 2
       Value:
         <LowestAllowedValue>k__BackingField: 0
         <Value>k__BackingField: 2

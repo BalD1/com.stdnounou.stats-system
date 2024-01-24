@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 02c9fe99b94f17341aa39ba660ff972f, type: 3}
-  m_Name: SampleModifierData
+  m_Name: SlowingZoneSpeedModifier
   m_EditorClassIdentifier: 
-  <ID>k__BackingField: SampleModifier
-  <Stackable>k__BackingField: 1
+  <ID>k__BackingField: SlowingZoneSpeedModifier
+  <Stackable>k__BackingField: 0
   <StatType>k__BackingField: 6
-  <Amount>k__BackingField: 5
-  <ModifierType>k__BackingField: 0
-  <Temporary>k__BackingField: 1
-  <TicksLifetime>k__BackingField: 20
+  <Amount>k__BackingField: -0.5
+  <ModifierType>k__BackingField: 1
+  <Temporary>k__BackingField: 0
+  <TicksLifetime>k__BackingField: 0

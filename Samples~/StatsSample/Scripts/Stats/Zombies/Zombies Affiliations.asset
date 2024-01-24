@@ -9,18 +9,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f1b17645f858b54088a71c1b1019860, type: 3}
+  m_Script: {fileID: 11500000, guid: fd06bfbde3ef6484886f06f385ad9cde, type: 3}
   m_Name: Zombies Affiliations
   m_EditorClassIdentifier: 
-  <ID>k__BackingField: Zombies
-  <AffiliationsModifiers>k__BackingField:
+  <ID>k__BackingField: Props
+  <Modifiers>k__BackingField:
     _serializedList:
     - Key: {fileID: 11400000}
       Value:
         <AllowInteractions>k__BackingField: 0
         <StatsModificators>k__BackingField:
           _serializedList: []
-    - Key: {fileID: 11400000, guid: 4e7fecaea8b12044392ad710df7ff546, type: 2}
+    - Key: {fileID: 11400000, guid: 7992ce16f736784439d29f0a64a7b67c, type: 2}
       Value:
         <AllowInteractions>k__BackingField: 0
         <StatsModificators>k__BackingField:

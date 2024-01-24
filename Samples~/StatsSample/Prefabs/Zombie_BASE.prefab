@@ -264,8 +264,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6602319398546894397}
   - component: {fileID: 6602319398546894394}
-  - component: {fileID: 6811200650908948889}
   - component: {fileID: 6602319398546894392}
+  - component: {fileID: 5928332927969342557}
   m_Layer: 0
   m_Name: Zombie_BASE
   m_TagString: Untagged
@@ -306,22 +306,7 @@ MonoBehaviour:
   opponent: {fileID: 0}
   animator: {fileID: 6602319397963718977}
   animCallbacks: {fileID: 6602319397963718978}
-  <MonoStatsHandler>k__BackingField: {fileID: 6811200650908948889}
---- !u!114 &6811200650908948889
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6602319398546894396}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47509d5542b65f044bd22dd890362426, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <StatsHandler>k__BackingField:
-    <BaseStats>k__BackingField: {fileID: 11400000, guid: 60227a016eb3d4844adf3aa2e47c0553, type: 2}
-    debug: 0
+  <MonoStatsHandler>k__BackingField: {fileID: 5928332927969342557}
 --- !u!114 &6602319398546894392
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -335,7 +320,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   modifierData: {fileID: 11400000, guid: 322ace47b2ddca44486d9e16967fd908, type: 2}
-  statsHandler: {fileID: 6811200650908948889}
+  statsHandler: {fileID: 5928332927969342557}
+--- !u!114 &5928332927969342557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6602319398546894396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90005b84ae343bf4ca5077bcba93d82d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <StatsHandler>k__BackingField:
+    <BaseStats>k__BackingField: {fileID: 11400000, guid: 4a1e5a4bc4bc2c3408793565eaba8044, type: 2}
+    debug: 0
 --- !u!1 &6602319399521201321
 GameObject:
   m_ObjectHideFlags: 0

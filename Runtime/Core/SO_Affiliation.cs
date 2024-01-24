@@ -2,20 +2,28 @@ using AYellowpaper.SerializedCollections;
 using StdNounou.Core;
 using UnityEngine;
 
-namespace StdNounou.Stats.Core
+namespace StdNounou.Stats
 {
-	public abstract class SO_Affiliation<StatsKey> : ScriptableObject
-	{
+    [CreateAssetMenu(fileName = "New Affiliation Data", menuName = "StdNounou/Scriptables/Stats/Affiliation Data")]
+	public class SO_Affiliation : ScriptableObject
+    {
 		[field: SerializeField] public string ID { get; private set; }
+		[field: SerializeField] public SerializedDictionary<SO_Affiliation, S_AffiliationModifiers> Modifiers { get; private set; }
 
 		[System.Serializable]
 		public struct S_AffiliationModifiers
 		{
 			[field: SerializeField] public bool AllowInteractions { get; private set; }
-			[field: SerializeField] public SerializedDictionary<StatsKey, S_AffiliationStatModifier> StatsModificators { get; private set; }
+			[field: SerializeField] public SerializedDictionary<E_StatsKeys, S_StatModifiersContainer> StatsModificators { get; private set; }
 		}
 
-		[System.Serializable]
+        [System.Serializable]
+		public struct S_StatModifiersContainer
+		{
+            [field: SerializeField] public S_AffiliationStatModifier ReceivingModifiers { get; private set; }
+            [field: SerializeField] public S_AffiliationStatModifier InflictingModifiers { get; private set; }
+        }
+        [System.Serializable]
 		public struct S_AffiliationStatModifier
 		{
 			[field: SerializeField] public float Value { get; private set; }
@@ -30,38 +38,42 @@ namespace StdNounou.Stats.Core
 			Subdivide
 		}
 
-		public abstract bool TryGetAffiliationModifier(SO_Affiliation<StatsKey> target, out S_AffiliationModifiers modifiers);
-		public virtual float TryGetModifiedStat(SO_Affiliation<StatsKey> target, StatsKey statType, float statValue)
+		public bool TryGetAffiliationModifier(SO_Affiliation target, out S_AffiliationModifiers modifiers)
+		{
+			return Modifiers.TryGetValue(target, out modifiers);
+		}
+		public virtual float TryGetModifiedStat(SO_Affiliation target, E_StatsKeys statType, float statValue, bool receiver)
 		{
             if (!TryGetAffiliationModifier(target, out var modifiers)) return statValue;
             if (!modifiers.AllowInteractions) return statValue;
             if (!modifiers.StatsModificators.TryGetValue(statType, out var modificator)) return statValue;
-			return CalculateStatModification(statValue, modificator);
+			return CalculateStatModification(statValue, modificator, receiver);
         }
-        public bool AllowsInteractionsWith(SO_Affiliation<StatsKey> target)
+        public bool AllowsInteractionsWith(SO_Affiliation target)
         {
             if (!TryGetAffiliationModifier(target, out var modifiers)) return true;
             return modifiers.AllowInteractions;
         }
 
-        protected float CalculateStatModification(float statValue, S_AffiliationStatModifier modifier)
+        protected float CalculateStatModification(float statValue, S_StatModifiersContainer modifier, bool receiver)
 		{
-			switch (modifier.ModificationType)
+			S_AffiliationStatModifier modif = receiver ? modifier.ReceivingModifiers : modifier.InflictingModifiers;
+			switch (modif.ModificationType)
 			{
 				case E_AffiliationStatModifierType.Additive:
-					return statValue + modifier.Value;
+					return statValue + modif.Value;
 
 				case E_AffiliationStatModifierType.Multiplicative:
-					return statValue * modifier.Value;
+					return statValue * modif.Value;
 
 				case E_AffiliationStatModifierType.Substractive:
-					return statValue - modifier.Value;
+					return statValue - modif.Value;
 
 				case E_AffiliationStatModifierType.Subdivide:
-					return modifier.Value == 0 ? statValue : statValue / modifier.Value;
+					return modif.Value == 0 ? statValue : statValue / modif.Value;
 
 				default:
-					this.LogError($"No behavior for modifier type \"{modifier.ModificationType}\" was defined.");
+					this.LogError($"No behavior for modifier type \"{modif.ModificationType}\" was defined.");
 					return statValue;
 			}
 		}

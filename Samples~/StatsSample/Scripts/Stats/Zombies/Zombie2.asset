@@ -9,14 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4d45345afacb0e41bed6e95b218ee27, type: 3}
+  m_Script: {fileID: 11500000, guid: b67ee100191459346b45199fa78339b4, type: 3}
   m_Name: Zombie2
   m_EditorClassIdentifier: 
   <EntityName>k__BackingField: Zombie2
-  <Affiliation>k__BackingField: {fileID: 11400000, guid: 832ebd2cdfff5d249b7e441e3ff82dc0, type: 2}
-  stats:
+  <Affiliation>k__BackingField: {fileID: 11400000, guid: 1e6f93a5fa1939b458e56414fdd52303, type: 2}
+  <Stats>k__BackingField:
     _serializedList:
-    - Key: 2
+    - Key: 5
       Value:
         <LowestAllowedValue>k__BackingField: 0
         <Value>k__BackingField: 2.45
@@ -26,22 +26,17 @@ MonoBehaviour:
         <LowestAllowedValue>k__BackingField: 0
         <Value>k__BackingField: 200
         <HigherAllowedValue>k__BackingField: 400
-    - Key: 3
+    - Key: 1
       Value:
         <LowestAllowedValue>k__BackingField: 0
         <Value>k__BackingField: 20
         <HigherAllowedValue>k__BackingField: 100
-    - Key: 4
+    - Key: 3
       Value:
         <LowestAllowedValue>k__BackingField: 0
         <Value>k__BackingField: 10
         <HigherAllowedValue>k__BackingField: 100
-    - Key: 5
-      Value:
-        <LowestAllowedValue>k__BackingField: 0
-        <Value>k__BackingField: 2
-        <HigherAllowedValue>k__BackingField: 3
-    - Key: 6
+    - Key: 2
       Value:
         <LowestAllowedValue>k__BackingField: 0
         <Value>k__BackingField: 2.5

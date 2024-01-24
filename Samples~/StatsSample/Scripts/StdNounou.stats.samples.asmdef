@@ -1,11 +1,11 @@
 {
-    "name": "stdnounou.stats.runtime",
+    "name": "StdNounou.stats.samples",
     "rootNamespace": "",
     "references": [
-        "GUID:d525ad6bd40672747bde77962f1c401e",
+        "GUID:6ddfdff7ac37b354883336b81ebb5114",
         "GUID:07390520b8bc5a54cb973a134834aabf",
         "GUID:243cb9a95146b6548985b4ad65256056",
-        "GUID:0a4e593a1b8a4364695305d675761667"
+        "GUID:6055be8ebefd69e48b49212b09b47b2f"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

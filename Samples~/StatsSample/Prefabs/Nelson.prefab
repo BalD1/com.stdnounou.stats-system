@@ -145,8 +145,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7641730640183608398}
   - component: {fileID: 7641730640183608395}
-  - component: {fileID: 7641730640183608394}
   - component: {fileID: 7641730640183608397}
+  - component: {fileID: 7083276148214681557}
   m_Layer: 0
   m_Name: Nelson
   m_TagString: Untagged
@@ -187,22 +187,7 @@ MonoBehaviour:
   opponent: {fileID: 0}
   animator: {fileID: 7641730640731198324}
   animCallbacks: {fileID: 7641730640731198323}
-  <MonoStatsHandler>k__BackingField: {fileID: 7641730640183608394}
---- !u!114 &7641730640183608394
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7641730640183608399}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47509d5542b65f044bd22dd890362426, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <StatsHandler>k__BackingField:
-    <BaseStats>k__BackingField: {fileID: 11400000, guid: 8feecb958f4161943a1269891407b745, type: 2}
-    debug: 0
+  <MonoStatsHandler>k__BackingField: {fileID: 7083276148214681557}
 --- !u!114 &7641730640183608397
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -216,7 +201,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   modifierData: {fileID: 11400000, guid: 322ace47b2ddca44486d9e16967fd908, type: 2}
-  statsHandler: {fileID: 7641730640183608394}
+  statsHandler: {fileID: 7083276148214681557}
+--- !u!114 &7083276148214681557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7641730640183608399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90005b84ae343bf4ca5077bcba93d82d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <StatsHandler>k__BackingField:
+    <BaseStats>k__BackingField: {fileID: 11400000, guid: 3f39066cea20f9a4cb2eb5b6c768bfd2, type: 2}
+    debug: 0
 --- !u!1 &7641730640731198280
 GameObject:
   m_ObjectHideFlags: 0

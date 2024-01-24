@@ -3,17 +3,19 @@ using UnityEngine;
 using StdNounou.Tick;
 using StdNounou.Core.Editor;
 
-namespace StdNounou.Stats.Core
+namespace StdNounou.Stats
 {
     [System.Serializable]
-    public class StatsModifier_Core<StatsKey> : ITickable, IDisposable
+    public class StatsModifier : ITickable, IDisposable
     {
-        [field: SerializeField, ReadOnly] public SO_StatModifierData_Core<StatsKey> Data { get; private set; }
-        [SerializeField, ReadOnly] private StatsHandler_Core<StatsKey> handler;
+        [field: SerializeField, ReadOnly] public SO_StatModifierData Data { get; private set; }
+        [SerializeField, ReadOnly] private StatsHandler handler;
 
         private int currentTicks;
 
-        public StatsModifier_Core(SO_StatModifierData_Core<StatsKey> data, StatsHandler_Core<StatsKey> handler)
+        public event Action OnDeath;
+
+        public StatsModifier(SO_StatModifierData data, StatsHandler handler)
         {
             this.Data = data;
             this.handler = handler;
@@ -46,6 +48,7 @@ namespace StdNounou.Stats.Core
                 TickManagerEvents.OnTick -= OnTick;
             handler.OnAskReset -= ForceKill;
             handler.RemoveStatModifier(this);
+            OnDeath?.Invoke();
         }
 
         public void ForceKill()
