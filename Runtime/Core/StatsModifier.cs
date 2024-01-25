@@ -1,15 +1,13 @@
 using System;
-using UnityEngine;
 using StdNounou.Tick;
-using StdNounou.Core.Editor;
 
 namespace StdNounou.Stats
 {
     [System.Serializable]
     public class StatsModifier : ITickable, IDisposable
     {
-        [field: SerializeField, ReadOnly] public SO_StatModifierData Data { get; private set; }
-        [SerializeField, ReadOnly] private StatsHandler handler;
+        public SO_StatModifierData Data { get; private set; }
+        private StatsHandler handler;
 
         private int currentTicks;
 
