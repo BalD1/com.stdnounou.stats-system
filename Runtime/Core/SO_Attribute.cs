@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace StdNounou.Stats
 {
-	[CreateAssetMenu(fileName = "New Attribute Data", menuName = "StdNounou/Scriptables/Stats/Attribute Data")]
+	[CreateAssetMenu(fileName = "New Attribute Data", menuName = "StdNounou/Scriptables/Stats/Attribute Data", order = 13)]
 	public class SO_Attribute : ScriptableObject
 	{
 		[field: SerializeField] public string ID {  get; private set; }

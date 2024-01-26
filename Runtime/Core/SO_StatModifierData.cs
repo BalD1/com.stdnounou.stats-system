@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace StdNounou.Stats
 {
-    [CreateAssetMenu(fileName = "New StatModifier Data", menuName = "StdNounou/Scriptables/Stats/Stat Modifier Data")]
+    [CreateAssetMenu(fileName = "New StatModifier Data", menuName = "StdNounou/Scriptables/Stats/Stat Modifier Data", order = 11)]
     public class SO_StatModifierData : ScriptableObject
     {
         [field: SerializeField] public string ID { get; private set; }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace StdNounou.Stats
 {
-    [CreateAssetMenu(fileName = "New Affiliation Data", menuName = "StdNounou/Scriptables/Stats/Affiliation Data")]
+    [CreateAssetMenu(fileName = "New Affiliation Data", menuName = "StdNounou/Scriptables/Stats/Affiliation Data", order = 12)]
 	public class SO_Affiliation : ScriptableObject
     {
 		[field: SerializeField] public string ID { get; private set; }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace StdNounou.Stats
 {
-    [CreateAssetMenu(fileName = "New BaseStats", menuName = "StdNounou/Scriptables/Stats/Base Stats")]
+    [CreateAssetMenu(fileName = "New BaseStats", menuName = "StdNounou/Scriptables/Stats/Base Stats", order = 10)]
     public class SO_BaseStats : ScriptableObject, IStatContainer
     {
         [field: SerializeField] public string EntityName { get; private set; }
