@@ -1,6 +1,6 @@
 {
     "name": "stdnounou.stats.runtime",
-    "rootNamespace": "",
+    "rootNamespace": "StdNounou.Stats",
     "references": [
         "GUID:d525ad6bd40672747bde77962f1c401e",
         "GUID:07390520b8bc5a54cb973a134834aabf",

@@ -2,7 +2,7 @@ using UnityEditor;
 using StdNounou.Core.Editor;
 using StdNounou.Tick;
 
-namespace StdNounou.Stats
+namespace StdNounou.Stats.Editor
 {
     [CustomEditor(typeof(SO_StatModifierData))]
     public class ED_SO_StatModifierData : UnityEditor.Editor

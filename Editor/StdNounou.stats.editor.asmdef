@@ -1,6 +1,6 @@
 {
     "name": "stdnounou.stats.editor",
-    "rootNamespace": "",
+    "rootNamespace": "StdNounou.Stats.Editor",
     "references": [
         "GUID:0a4e593a1b8a4364695305d675761667",
         "GUID:6ddfdff7ac37b354883336b81ebb5114",
